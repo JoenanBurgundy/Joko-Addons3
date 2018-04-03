@@ -6,18 +6,16 @@
 			<field name="model">product.template</field>
 			<field name="inherit_id" ref="product.product_template_form_view" />
 			<field name="arch" type="xml">
-				<!-- <field name="type" position="before">
-					<field name="oplos_code" domain="[('product_tmpl_id','!=',id)]" />
-					<field name="oplos_desc"
-						attrs="{'invisible': [('oplos_code','=',False)], 'required': [('oplos_code','!=',False)]}" />
-					<field name="oplos_sale_price"
-						attrs="{'invisible': [('oplos_code','=',False)], 'required': [('oplos_code','!=',False)]}" />
-				</field> -->
+				<!-- <field name="type" position="before"> <field name="oplos_code" domain="[('product_tmpl_id','!=',id)]" 
+					/> <field name="oplos_desc" attrs="{'invisible': [('oplos_code','=',False)], 
+					'required': [('oplos_code','!=',False)]}" /> <field name="oplos_sale_price" 
+					attrs="{'invisible': [('oplos_code','=',False)], 'required': [('oplos_code','!=',False)]}" 
+					/> </field> -->
 				<page name="sales" position="after">
 					<page name="oplos" string="Oplos">
 						<field name="oplos_ids">
 							<tree editable="top">
-								<field name="oplos_product_id" />
+								<field name="oplos_product_id" context="{'code_only': True}" />
 								<field name="oplos_desc" />
 							</tree>
 						</field>
