@@ -25,13 +25,13 @@ class ProductProduct(models.Model):
     
     @api.multi
     def name_get(self):
-        if self._context.get('code_only'):
-            result = []
-            for product in self:
-                result.append((product.id, "%s" % (product.default_code or product.name)))
-            return result
-        else:
-            return super(ProductProduct, self).name_get()
+#         if self._context.get('code_only'):
+        result = []
+        for product in self:
+            result.append((product.id, "%s" % (product.default_code or product.name)))
+        return result
+#         else:
+#             return super(ProductProduct, self).name_get()
 
 class ProductOplos(models.Model):
     _name = 'product.oplos'

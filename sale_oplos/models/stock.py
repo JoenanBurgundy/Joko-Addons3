@@ -15,12 +15,13 @@ from openerp.exceptions import UserError
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
     
-    po_reference = fields.Char(string='PO Reference')
+    customer_po_ref = fields.Char(string='Customer PO Ref')
     
 class StockMove(models.Model):
     _inherit = 'stock.move'
     
     oplos_product_id = fields.Many2one('product.product', string='Oplos Code')
+    customer_po_ref = fields.Char(string='Customer PO Ref')
     
     @api.onchange('product_id')
     def _onchange_product_id_oplos(self):
@@ -37,3 +38,8 @@ class StockMove(models.Model):
         if self.oplos_product_id:
             self.name = self.product_id.oplos_ids.filtered(lambda r: r.oplos_product_id == self.oplos_product_id)[0].oplos_desc
         return {}
+    
+    def _get_new_picking_values(self):
+        vals = super(StockMove, self)._get_new_picking_values()
+        vals['customer_po_ref'] = self.customer_po_ref
+        return vals
