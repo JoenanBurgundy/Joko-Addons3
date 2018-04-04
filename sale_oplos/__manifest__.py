@@ -10,6 +10,8 @@
     'data': [
         'views/product_view.xml',
         'views/sale_view.xml',
+        'views/stock_view.xml',
+        'views/invoice_view.xml',
     ],
     'demo':[
     ],
