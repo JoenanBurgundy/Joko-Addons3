@@ -20,23 +20,23 @@ class StockPicking(models.Model):
 class StockMove(models.Model):
     _inherit = 'stock.move'
     
-    oplos_product_id = fields.Many2one('product.product', string='Oplos Code')
+    oplos_id= fields.Many2one('product.oplos', string='Oplos Code', readonly=True, states={'draft': [('readonly', False)]})
     customer_po_ref = fields.Char(string='Customer PO Ref')
     
     @api.onchange('product_id')
     def _onchange_product_id_oplos(self):
         if not self.product_id:
-            self.oplos_product_id = False
-            return {'domain': {'oplos_product_id': [False]}}
+            self.oplos_id = False
+            return {'domain': {'oplos_id': [False]}}
         return {
             'domain': {
-                'oplos_product_id': [('id', 'in', [product.id for product in [oplos.oplos_product_id for oplos in self.product_id.oplos_ids]])]
+                'oplos_id': [('product_id', '=', self.product_id.product_tmpl_id.id)]
         }}
 
-    @api.onchange('oplos_product_id')
-    def _onchange_oplos_product_id(self):
-        if self.oplos_product_id:
-            self.name = self.product_id.oplos_ids.filtered(lambda r: r.oplos_product_id == self.oplos_product_id)[0].oplos_desc
+    @api.onchange('oplos_id')
+    def _onchange_oplos_id(self):
+        if self.oplos_id:
+            self.name = self.oplos_id.oplos_desc
         return {}
     
     def _get_new_picking_values(self):

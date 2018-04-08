@@ -23,25 +23,27 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
     
-    @api.multi
-    def name_get(self):
-#         if self._context.get('code_only'):
-        result = []
-        for product in self:
-            result.append((product.id, "%s" % (product.default_code or product.name)))
-        return result
-#         else:
-#             return super(ProductProduct, self).name_get()
+#     @api.multi
+#     def name_get(self):
+# #         if self._context.get('code_only'):
+#         result = []
+#         for product in self:
+#             result.append((product.id, "%s" % (product.default_code or product.name)))
+#         return result
+# #         else:
+# #             return super(ProductProduct, self).name_get()
 
 class ProductOplos(models.Model):
     _name = 'product.oplos'
+    _rec_name = 'oplos_code'
 
-    product_id = fields.Many2one('product.product', string='Product')
-    oplos_product_id = fields.Many2one('product.product', string='Oplos Code', required=True)
+    product_id = fields.Many2one('product.template', string='Product')
+#     oplos_product_id = fields.Many2one('product.product', string='Oplos Code', required=True)
+    oplos_code = fields.Char(string='Oplos Code', required=True)
     oplos_desc = fields.Char(string='Oplos Description', required=True)
     
-    @api.onchange('oplos_product_id')
-    def _onchange_oplos_product_id(self):
-        self.oplos_desc = self.oplos_product_id.name if self.oplos_product_id else False
-        return
+#     @api.onchange('oplos_product_id')
+#     def _onchange_oplos_product_id(self):
+#         self.oplos_desc = self.oplos_product_id.name if self.oplos_product_id else False
+#         return
         

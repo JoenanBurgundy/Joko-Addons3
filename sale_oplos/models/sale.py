@@ -39,25 +39,25 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
     
-#     oplos = fields.Boolean(string='Oplos', readonly=True, states={'draft': [('readonly', False)]})
-    oplos_product_id = fields.Many2one('product.product', string='Oplos Code')
+    oplos_id= fields.Many2one('product.oplos', string='Oplos Code', readonly=True, states={'draft': [('readonly', False)]})
+#     oplos_product_id = fields.Many2one('product.product', string='Oplos Code')
     price_unit_public = fields.Float(string='Public Price', digits=dp.get_precision('Product Price'),
         related='product_id.list_price', readonly=True)
     
     @api.onchange('product_id')
     def _onchange_product_id_oplos(self):
+        self.oplos_id = False
         if not self.product_id:
-            self.oplos_product_id = False
-            return {'domain': {'oplos_product_id': [False]}}
+            return {'domain': {'oplos_id': [False]}}
         return {
             'domain': {
-                'oplos_product_id': [('id', 'in', [product.id for product in [oplos.oplos_product_id for oplos in self.product_id.oplos_ids]])]
+                'oplos_id': [('product_id', '=', self.product_id.product_tmpl_id.id)]
         }}
 
-    @api.onchange('oplos_product_id')
-    def _onchange_oplos_product_id(self):
-        if self.oplos_product_id:
-            self.name = self.product_id.oplos_ids.filtered(lambda r: r.oplos_product_id == self.oplos_product_id)[0].oplos_desc
+    @api.onchange('oplos_id')
+    def _onchange_oplos_id(self):
+        if self.oplos_id:
+            self.name = self.oplos_id.oplos_desc
         return {}
         
     @api.multi
@@ -65,5 +65,6 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         res = super(SaleOrderLine, self)._prepare_order_line_procurement(group_id)
         res['customer_po_ref'] = self.order_id.customer_po_ref
+        res['oplos_id'] = self.oplos_id.id
         return res
 #     

@@ -15,7 +15,7 @@
 					<page name="oplos" string="Oplos">
 						<field name="oplos_ids">
 							<tree editable="top">
-								<field name="oplos_product_id" context="{'code_only': True}" />
+								<field name="oplos_code" />
 								<field name="oplos_desc" />
 							</tree>
 						</field>
